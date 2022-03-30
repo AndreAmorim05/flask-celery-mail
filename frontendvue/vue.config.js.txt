@@ -1,0 +1,4 @@
+module.exports = {
+  outputDir: '../preditivo/preditivo/templates/website_corp',
+  assetsDir: '../../static/website_corp'
+}

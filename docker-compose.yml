@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+  flaskcelerymail:
+    container_name: flaskcelerymail
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_APP=flaskcelerymail.app
+      - FLASK_ENV=production
+      - FLASK_CELERY_BROKER_URL="redis://redis/0"
+      - FLASK_CELERY_RESULT_BACKEND="redis://redis/0"
+    depends_on:
+      - redis
+      - celeryworker
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    command: 'gunicorn "flaskcelerymail.app:create_app()"'
+  
+  celeryworker:
+    container_name: celeryworker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - FLASK_APP=flaskcelerymail.app
+      - FLASK_ENV=production
+      - FLASK_CELERY_BROKER_URL="redis://redis/0"
+      - FLASK_CELERY_RESULT_BACKEND="redis://redis/0"
+      - FLASK_MAIL_USERNAME=""
+      - FLASK_MAIL_PASSWORD=""
+      - FLASK_MAIL_DEFAULT_SENDER=""
+    depends_on:
+      - redis
+    restart: on-failure
+    command: "celery -A worker worker --loglevel=info --pool=solo"
+
+  redis:
+    image: "redis:alpine"
+    hostname: redis
+    container_name: redis
+    ports:
+      - "6379:6379"

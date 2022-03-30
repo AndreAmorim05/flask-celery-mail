@@ -1,0 +1,31 @@
+[default]
+DEBUG = false
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USE_SSL = true
+MAIL_DEBUG = false
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "America/Sao_Paulo"
+CORS_HEADERS = "Content-Type"
+SECRET_KEY = "fe86e65e-d1c4-4d57-80ff-619dc4b53cfe"
+EXTENSIONS = [
+    "flaskcelerymail.ext.celery:init_celery",
+    "flaskcelerymail.ext.cors:init_app",
+    "flaskcelerymail.ext.hooks:init_app",
+    "flaskcelerymail.ext.api:init_app",
+    "flaskcelerymail.ext.mail:init_app",
+    
+]
+
+[development]
+DEBUG = true
+MAIL_DEBUG = true
+EXTENSIONS = [
+    "dynaconf_merge",    
+]
+
+
+[production]
+DEBUG = false
